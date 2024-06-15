@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.project.enums.Role;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,9 +37,11 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
+    private String cpf;
     private String email;
     private String password;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
     private String nome;
     private String address;
@@ -72,7 +76,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("CLIENT"));
+        return List.of(new SimpleGrantedAuthority("MANAGER"));
     }
 
     @Override

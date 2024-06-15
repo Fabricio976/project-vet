@@ -18,7 +18,9 @@ import com.project.dto.LoginResponseDTO;
 import com.project.dto.RegisterDTO;
 import com.project.entitys.Usuario;
 import com.project.enums.Role;
+import com.project.exeptions.EmailNotFoundException;
 import com.project.repositorys.UserRepository;
+import com.project.services.details.ManagerUser;
 import com.project.services.details.TokenService;
 
 @RestController
@@ -34,18 +36,27 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
 
-    // @Autowired
-    // private ManagerUser managerUser;
+    @Autowired
+    private ManagerUser managerUser;
 
-    // @PostMapping("/codigo-forgot")
-    // public String recuperarCodigo(@RequestBody Usuario usuario){
-    // return managerUser.solicitarCodigo(usuario.getEmail());
-    // }
+    @PostMapping("/code-forgot")
+    public String recouverCode(@RequestBody Usuario usuario) {
+        String email = usuario.getEmail();
+        UserDetails foundUser = userRepository.findByEmail(email);
+    
+        if (foundUser == null) {
+            throw new EmailNotFoundException("Email not found: " + email);
+        }
+    
+        return managerUser.solicitarCodigo(email);
+    }
+    
 
-    // @PostMapping("/alterar-senha")
-    // public String alterarSenha(@RequestBody Usuario usuario){
-    // return managerUser.alterarSenha(usuario);
-    // }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestBody Usuario usuario) {
+        return managerUser.alterarSenha(usuario);
+    }
 
     /**
      * endpoint para autenticação do usuário e geração de token JWT
@@ -56,21 +67,19 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
-
-        // autentica o usuário usando o AuthenticationManager
         var auth = this.authenticationManager.authenticate(usernamePassword);
-
-        // gera um token JWT para o usuário autenticado
         var token = tokenService.generateToken((Usuario) auth.getPrincipal());
-
-        UserDetails idUser = userRepository.findByEmail(data.email());
-        return ResponseEntity.ok(new LoginResponseDTO(token, idUser));
+        
+        // Busca o usuário pelo email para obter o ID
+        UserDetails user = userRepository.findByEmail(data.email());
+        String userId = ((Usuario) user).getId();
+        return ResponseEntity.ok(new LoginResponseDTO(token, userId));
     }
 
     /**
-     * Endpoint para registrar um novo usuário.
+     * endpoint para registrar um novo cliente.
      *
-     * @param data Dados de registro recebidos no corpo da requisição
+     * @param data dados de registro recebidos no corpo da requisição
      * @return ResponseEntity indicando o resultado da operação de registro
      */
     @PostMapping("/register/client")
@@ -89,6 +98,12 @@ public class AuthenticationController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Endpoint para registrar um novo funcionario.
+     *
+     * @param data Dados de registro recebidos no corpo da requisição
+     * @return ResponseEntity indicando o resultado da operação de registro
+     */
     @PostMapping("/register/funcionario")
     public ResponseEntity<String> registerFuncionario(@RequestBody @Valid RegisterDTO data) {
         if (this.userRepository.findByEmail(data.email()) != null) {
