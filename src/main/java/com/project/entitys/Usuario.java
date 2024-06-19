@@ -55,10 +55,11 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "responsible")
     private List<Animal> animalsResponsible = new ArrayList<>();
 
-    public Usuario(String nome, String email, String password, Role role,  String address, String telephone) {
+    public Usuario(String nome, String email, String password,  String cpf, Role role,  String address, String telephone) {
         this.nome = nome;
         this.email = email;
         this.password = password;
+        this.cpf = cpf;
         this.role = role;
         this.address = address;
         this.telephone = telephone;
@@ -97,6 +98,10 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         return true; // Verifica se a conta esta b
+    }
+
+    public void addAnimal(Animal animal) {
+        this.animalsResponsible.add(animal);
     }
 
 }

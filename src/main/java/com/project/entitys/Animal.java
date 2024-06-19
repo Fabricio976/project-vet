@@ -45,9 +45,4 @@ public class Animal {
     @JoinColumn(name = "usuario_id_fk")
     private Usuario responsible;
 
-    public Animal orElseThrow(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
-    }
-
 }

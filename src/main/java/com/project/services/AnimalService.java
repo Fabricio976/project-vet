@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.entitys.Animal;
 import com.project.entitys.Usuario;
+import com.project.exeptions.CpfNotFoundException;
 import com.project.exeptions.RgNotFoundException;
 import com.project.repositorys.AnimalRepository;
 import com.project.repositorys.UserRepository;
@@ -32,17 +33,22 @@ public class AnimalService {
 
     public Animal searchById(String id) {
         return animalRepository.findById(id).get();
+
+    }
+    public Animal findByRg(Integer rg) {
+        Animal animal = animalRepository.findByRg(rg);
+        if (animal == null) {
+            throw new RgNotFoundException("Não existe animal cadastrado com esse RG: " + rg);
+        }
+        return animal;
+    }
     
-    }
-
-   public Animal findByRg(Integer rg) {
-        return animalRepository.findByRg(rg).orElseThrow(() -> new RgNotFoundException("Não existe animal cadastrado com esse RG: " + rg));
-    }
-
     @Transactional
-    public String registerAnimal(String cpf, Animal animal) {
-
-        Usuario usuario = userRepository.findByCpf(cpf);
+    public String registerAnimal(String id, Animal animal) {
+        if (userRepository.findById(id) == null) {
+            throw new CpfNotFoundException("Usuário não encontrado");
+        }
+        Usuario usuario = userRepository.findById(id).get();
         animal.setResponsible(usuario);
         animal.setDateRegister(new Date());
         animal.setRg(generateUniqueRg());

@@ -1,7 +1,7 @@
 package com.project.repositorys;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,9 +15,8 @@ public interface AnimalRepository extends JpaRepository<Animal, String> {
 
     boolean existsByRg(Integer rg);
 
-    // Encontra os animais por e-mail do responsável
-    @Query("SELECT a FROM Animal a WHERE a.responsible.email = :email")
-    List<AnimalRepository> findByResponsibleEmail(@Param("email") String email);
+    @Query("SELECT a FROM Animal a WHERE a.responsible.cpf = :cpf")
+    List<Animal> findAnimalsByUserCpf(@Param("cpf") String cpf);
 
-    Optional<Animal> findByRg(Integer rg);
+    Animal findByRg(Integer rg);
 }

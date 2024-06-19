@@ -22,27 +22,26 @@ public class SecurityConfigurations {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return  httpSecurity
+        return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/projectvet/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/projectvet/register/client").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/projectvet/register/funcionario").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers(HttpMethod.POST, "/projectvet/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/projectvet/register/funcionario").hasRole("MANAGER")
+
+                        .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

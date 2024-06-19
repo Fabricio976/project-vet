@@ -19,8 +19,10 @@ import com.project.entitys.Animal;
 import com.project.repositorys.AnimalRepository;
 import com.project.services.AnimalService;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/animal")
+@RequestMapping("/animals")
 public class AnimalController {
 
 
@@ -42,14 +44,14 @@ public class AnimalController {
         return animalRepository.findById(animalId).get();
     }
 
-    @GetMapping("/searchByRg/{rg}")
-    public Animal searchByResponsible(@PathVariable Integer rg) throws Exception {
-        return animalService.findByRg(rg);
-    }
+    // @GetMapping("/searchByRg/{rg}")
+    // public Animal searchByResponsible(@PathVariable Integer rg) throws Exception {
+    //     return animalService.findByRg(rg);
+    // }
 
-    @PostMapping("/registerAnimal")
-    public String registerAnimal(Authentication auth, @RequestBody Animal animalagem) {
-        return animalService.registerAnimal(auth.getPrincipal().toString(), animalagem);
+    @PostMapping("/register")
+    public String registerAnimal(@RequestBody @Valid Animal dataAnimal, Authentication auth) {
+        return animalService.registerAnimal(auth.getPrincipal().toString(), dataAnimal);
     }
 
     @PutMapping("/editAnimal")

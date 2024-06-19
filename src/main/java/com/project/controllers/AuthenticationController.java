@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.AuthenticationDTO;
 import com.project.dto.LoginResponseDTO;
-import com.project.dto.RegisterDTO;
+import com.project.dto.RegisterUserDTO;
 import com.project.entitys.Usuario;
 import com.project.enums.Role;
 import com.project.exeptions.EmailNotFoundException;
@@ -83,13 +83,13 @@ public class AuthenticationController {
      * @return ResponseEntity indicando o resultado da operação de registro
      */
     @PostMapping("/register/client")
-    public ResponseEntity<String> registerClient(@RequestBody @Valid RegisterDTO data) {
+    public ResponseEntity<String> registerClient(@RequestBody @Valid RegisterUserDTO data) {
         if (this.userRepository.findByEmail(data.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        Usuario newUser = new Usuario(data.name(), data.email(), encryptedPassword,
+        Usuario newUser = new Usuario(data.name(), data.email(), encryptedPassword, data.cpf(),
                 Role.CLIENT,
                 data.address(),
                 data.telephone());
@@ -105,13 +105,13 @@ public class AuthenticationController {
      * @return ResponseEntity indicando o resultado da operação de registro
      */
     @PostMapping("/register/funcionario")
-    public ResponseEntity<String> registerFuncionario(@RequestBody @Valid RegisterDTO data) {
+    public ResponseEntity<String> registerFuncionario(@RequestBody @Valid RegisterUserDTO data) {
         if (this.userRepository.findByEmail(data.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        Usuario newUser = new Usuario(data.name(), data.email(), encryptedPassword,
+        Usuario newUser = new Usuario(data.name(), data.email(), encryptedPassword, data.cpf(),
                 Role.MANAGER,
                 data.address(),
                 data.telephone());
