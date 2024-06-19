@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.enums.Role;
 
 import jakarta.persistence.Entity;
@@ -39,6 +40,8 @@ public class Usuario implements UserDetails {
     private String id;
     private String cpf;
     private String email;
+    
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -46,12 +49,15 @@ public class Usuario implements UserDetails {
     private String nome;
     private String address;
     private String telephone;
+    
+    @JsonIgnore
+    private String codeRecoveryPassword;
 
+    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateShippingCodigo;
 
-    private String codeRecoveryPassword;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "responsible")
     private List<Animal> animalsResponsible = new ArrayList<>();
 
@@ -67,41 +73,37 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return nome;
     }
 
     @Override
     public String getPassword() {
         return password;
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("MANAGER"));
+        return List.of(new SimpleGrantedAuthority(role.getRole().toUpperCase()));
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true; // Verificar se a conta está habilitada
     }
-
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true; // Verificar se as credenciais estão expiradas
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true; // Verificar se a conta está expirada
     }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true; // Verifica se a conta esta b
-    }
-
-    public void addAnimal(Animal animal) {
-        this.animalsResponsible.add(animal);
     }
 
 }

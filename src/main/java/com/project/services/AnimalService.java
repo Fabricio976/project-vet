@@ -46,7 +46,7 @@ public class AnimalService {
     @Transactional
     public String registerAnimal(String id, Animal animal) {
         if (userRepository.findById(id) == null) {
-            throw new CpfNotFoundException("Usuário não encontrado");
+            throw new CpfNotFoundException("Usuário não encontrado!");
         }
         Usuario usuario = userRepository.findById(id).get();
         animal.setResponsible(usuario);
@@ -61,8 +61,8 @@ public class AnimalService {
         return ("Editado com Sucesso!");
     }
 
-    public void excluir(String id) {
-        Animal animal = animalRepository.findById(id).get();
+    public void excluir(Integer rg) {
+        Animal animal = animalRepository.findByRg(rg);
         animalRepository.delete(animal);
     }
 

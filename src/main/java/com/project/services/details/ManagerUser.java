@@ -26,7 +26,7 @@ public class ManagerUser {
     public String solicitarCodigo(String email) {
 
         Usuario usuario = (Usuario) userRepository.findByEmail(email);
-        usuario.setCodeRecoveryPassword(getCodigoRecuperacaoSenha(usuario.getId()));
+        usuario.setCodeRecoveryPassword(getCodeRecoveryPassword(usuario.getId()));
         usuario.setDateShippingCodigo(new Date());
         userRepository.saveAndFlush(usuario);
         emailService.enviarEmailTexto(usuario.getEmail(), "Código de Recuperação de Senha",
@@ -53,7 +53,7 @@ public class ManagerUser {
         }
     }
 
-    private String getCodigoRecuperacaoSenha(String id) {
+    private String getCodeRecoveryPassword(String id) {
 
         if (id.length() > 4) {
             id = id.substring(0, 4);

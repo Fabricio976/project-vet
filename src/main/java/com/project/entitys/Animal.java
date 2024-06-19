@@ -1,6 +1,7 @@
 package com.project.entitys;
 
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -37,12 +38,12 @@ public class Animal {
     private String race;
     private String specie;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonIgnore
+    @Temporal(TemporalType.DATE)
     private Date dateRegister;
 
-    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "usuario_id_fk")
+    @JoinColumn(name = "usuario_id")
     private Usuario responsible;
 
 }

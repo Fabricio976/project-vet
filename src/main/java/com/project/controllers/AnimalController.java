@@ -34,21 +34,26 @@ public class AnimalController {
 
 
 
-    @GetMapping("/searchAll/{idUser}")
-    public List<Animal> searchAllanimals(@PathVariable String idUser) throws Exception {
+    @GetMapping("/searchAll")
+    public List<Animal> searchAllanimals(Authentication auth) throws Exception {
         return animalService.searchAllAnimals();
     }
 
-    @GetMapping("/searchById/{id}")
-    public Animal searchById(@PathVariable("id") String animalId) throws Exception {
-        return animalRepository.findById(animalId).get();
-    }
+    // @GetMapping("/searchById/{id}")
+    // public Animal searchById(@PathVariable("id") String animalId) throws Exception {
+    //     return animalRepository.findById(animalId).get();
+    // }
 
     // @GetMapping("/searchByRg/{rg}")
     // public Animal searchByResponsible(@PathVariable Integer rg) throws Exception {
     //     return animalService.findByRg(rg);
     // }
 
+
+    @GetMapping("/animais/{cpf}")
+    public List<Animal> getAnimaisByUserCpf(Authentication auth, @PathVariable String cpf) {
+        return animalRepository.findAnimalsByUserCpf(cpf);
+    }
     @PostMapping("/register")
     public String registerAnimal(@RequestBody @Valid Animal dataAnimal, Authentication auth) {
         return animalService.registerAnimal(auth.getPrincipal().toString(), dataAnimal);
@@ -59,9 +64,9 @@ public class AnimalController {
         return ResponseEntity.ok().body(animalService.editRegister(idAnimal));
     }
 
-    @DeleteMapping("/excluirAnimal/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable("id") String id) {
-        animalService.excluir(id);
+    @DeleteMapping("/excluirAnimal/{rg}")
+    public ResponseEntity<Void> excluir(@PathVariable("rg") Integer rg) {
+        animalService.excluir(rg);
         return ResponseEntity.ok().build();
     }
 
