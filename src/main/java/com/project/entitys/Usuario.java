@@ -36,6 +36,7 @@ import lombok.Setter;
 public class Usuario implements UserDetails {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String cpf;

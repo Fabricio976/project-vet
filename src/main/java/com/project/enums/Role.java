@@ -1,8 +1,8 @@
 package com.project.enums;
 
 public enum Role {
-    CLIENT("client"),
-    MANAGER("manager");
+    CLIENT("Client"),
+    MANAGER("Manager");
 
     private String role;
 

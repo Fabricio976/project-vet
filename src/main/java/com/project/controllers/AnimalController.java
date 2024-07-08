@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.dto.RegisterAnimalDTO;
 import com.project.entitys.Animal;
 import com.project.repositorys.AnimalRepository;
 import com.project.services.AnimalService;
@@ -33,29 +34,22 @@ public class AnimalController {
     private AnimalRepository animalRepository;
 
 
-
     @GetMapping("/searchAll")
     public List<Animal> searchAllanimals(Authentication auth) throws Exception {
         return animalService.searchAllAnimals();
     }
 
-    // @GetMapping("/searchById/{id}")
-    // public Animal searchById(@PathVariable("id") String animalId) throws Exception {
-    //     return animalRepository.findById(animalId).get();
-    // }
-
-    // @GetMapping("/searchByRg/{rg}")
-    // public Animal searchByResponsible(@PathVariable Integer rg) throws Exception {
-    //     return animalService.findByRg(rg);
-    // }
-
-
-    @GetMapping("/animais/{cpf}")
-    public List<Animal> getAnimaisByUserCpf(Authentication auth, @PathVariable String cpf) {
+    @GetMapping("/searchByUserCpf/{cpf}")
+    public List<Animal> searchByResponsible(@PathVariable String cpf) throws Exception {
         return animalRepository.findAnimalsByUserCpf(cpf);
     }
+
+    @GetMapping("/animalRg/{rg}")
+    public Animal getAnimaisByUserCpf(Authentication auth, @PathVariable Integer rg) {
+        return animalService.findByRg(rg);
+    }
     @PostMapping("/register")
-    public String registerAnimal(@RequestBody @Valid Animal dataAnimal, Authentication auth) {
+    public String registerAnimal(@RequestBody @Valid RegisterAnimalDTO dataAnimal, Authentication auth) {
         return animalService.registerAnimal(auth.getPrincipal().toString(), dataAnimal);
     }
 

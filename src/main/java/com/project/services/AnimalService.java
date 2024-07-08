@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.dto.RegisterAnimalDTO;
 import com.project.entitys.Animal;
 import com.project.entitys.Usuario;
 import com.project.exeptions.CpfNotFoundException;
@@ -16,7 +17,7 @@ import com.project.repositorys.AnimalRepository;
 import com.project.repositorys.UserRepository;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class AnimalService {
 
     @Autowired
@@ -25,16 +26,13 @@ public class AnimalService {
     @Autowired
     private UserRepository userRepository;
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public List<Animal> searchAllAnimals() {
         return animalRepository.findAll();
     }
 
-    public Animal searchById(String id) {
-        return animalRepository.findById(id).get();
-
-    }
+    @Transactional(readOnly = true)
     public Animal findByRg(Integer rg) {
         Animal animal = animalRepository.findByRg(rg);
         if (animal == null) {
@@ -43,19 +41,26 @@ public class AnimalService {
         return animal;
     }
     
-    @Transactional
-    public String registerAnimal(String id, Animal animal) {
+    
+    public String registerAnimal(String id, RegisterAnimalDTO animalDTO) {
         if (userRepository.findById(id) == null) {
             throw new CpfNotFoundException("Usuário não encontrado!");
         }
+        Animal animal = new Animal();
         Usuario usuario = userRepository.findById(id).get();
         animal.setResponsible(usuario);
+        animal.setName(animalDTO.name());
+        animal.setAge(animalDTO.age());
+        animal.setRace(animalDTO.race());
+        animal.setSpecie(animalDTO.specie());
+        animal.setServicePet(animalDTO.servicePet());
         animal.setDateRegister(new Date());
         animal.setRg(generateUniqueRg());
         animalRepository.save(animal);
         return "Animal Registrado!";
     }
 
+    
     public String editRegister(Animal animal) {
         animalRepository.saveAndFlush(animal);
         return ("Editado com Sucesso!");
@@ -66,10 +71,11 @@ public class AnimalService {
         animalRepository.delete(animal);
     }
 
+    //Gera um número de 8 dígitos aleatorio para o RG do aniamal
     private Integer generateUniqueRg() {
         Integer rg;
         do {
-            rg = random.nextInt(90000000) + 10000000; // Gera um número de 8 dígitos
+            rg = random.nextInt(90000000) + 10000000;
         } while (animalRepository.existsByRg(rg));
         return rg;
     }

@@ -12,11 +12,12 @@ import com.project.entitys.Animal;
 
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, String> {
-
+    
+    Animal findByRg(Integer rg);
+    
     boolean existsByRg(Integer rg);
 
     @Query("SELECT a FROM Animal a WHERE a.responsible.cpf = :cpf")
     List<Animal> findAnimalsByUserCpf(@Param("cpf") String cpf);
 
-    Animal findByRg(Integer rg);
 }

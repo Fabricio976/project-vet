@@ -3,6 +3,7 @@ package com.project.entitys;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.enums.ServicePet;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,6 +29,7 @@ import lombok.Setter;
 public class Animal {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
@@ -45,5 +47,7 @@ public class Animal {
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario responsible;
+
+    private ServicePet servicePet;
 
 }
