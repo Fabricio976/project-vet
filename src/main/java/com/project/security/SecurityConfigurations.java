@@ -28,7 +28,6 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/projectvet/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/projectvet/register/funcionario").hasRole("MANAGER")
-
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
