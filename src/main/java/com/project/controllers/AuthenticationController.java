@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +16,9 @@ import com.project.dto.AuthenticationDTO;
 import com.project.dto.LoginResponseDTO;
 import com.project.dto.RegisterUserDTO;
 import com.project.entitys.Usuario;
-import com.project.enums.Role;
 import com.project.exeptions.EmailNotFoundException;
 import com.project.repositorys.UserRepository;
+import com.project.services.UsuarioService;
 import com.project.services.details.ManagerUser;
 import com.project.services.details.TokenService;
 
@@ -32,6 +31,9 @@ public class AuthenticationController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Autowired
     private TokenService tokenService;
@@ -69,7 +71,7 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((Usuario) auth.getPrincipal());
-        
+       
         // Busca o usuário pelo email para obter o ID
         UserDetails user = userRepository.findByEmail(data.email());
         String userId = ((Usuario) user).getId();
@@ -83,19 +85,11 @@ public class AuthenticationController {
      * @return ResponseEntity indicando o resultado da operação de registro
      */
     @PostMapping("/register/client")
-    public ResponseEntity<String> registerClient(@RequestBody @Valid RegisterUserDTO data) {
+    public ResponseEntity<Usuario> registerClient(@RequestBody @Valid RegisterUserDTO data) {
         if (this.userRepository.findByEmail(data.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        Usuario newUser = new Usuario(data.name(), data.email(), encryptedPassword, data.cpf(),
-                Role.CLIENT,
-                data.address(),
-                data.telephone());
-        this.userRepository.save(newUser);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(usuarioService.registerUser(data));
     }
 
     /**
@@ -105,19 +99,11 @@ public class AuthenticationController {
      * @return ResponseEntity indicando o resultado da operação de registro
      */
     @PostMapping("/register/funcionario")
-    public ResponseEntity<String> registerFuncionario(@RequestBody @Valid RegisterUserDTO data) {
+    public ResponseEntity<Usuario> registerFuncionario(@RequestBody @Valid RegisterUserDTO data) {
         if (this.userRepository.findByEmail(data.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        Usuario newUser = new Usuario(data.name(), data.email(), encryptedPassword, data.cpf(),
-                Role.MANAGER,
-                data.address(),
-                data.telephone());
-        this.userRepository.save(newUser);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(usuarioService.regiterManager(data));
     }
 
 }

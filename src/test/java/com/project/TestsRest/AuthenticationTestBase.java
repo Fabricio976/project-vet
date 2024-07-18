@@ -21,7 +21,7 @@ import io.restassured.response.Response;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class AuthenticationTest {
+public class AuthenticationTestBase {
 
     @LocalServerPort
     private int port;
