@@ -1,10 +1,9 @@
 package com.project.controllers;
 
-import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +16,13 @@ import com.project.dto.LoginResponseDTO;
 import com.project.dto.RegisterUserDTO;
 import com.project.entitys.Usuario;
 import com.project.exeptions.EmailNotFoundException;
+import com.project.exeptions.InvalidCredentialsException;
 import com.project.repositorys.UserRepository;
 import com.project.services.UsuarioService;
 import com.project.services.details.ManagerUser;
 import com.project.services.details.TokenService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/projectvet")
@@ -65,15 +67,19 @@ public class AuthenticationController {
      * @return ResponseEntity contendo o token JWT e os detalhes do usuário
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) {
+        try {
+            var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+            var auth = this.authenticationManager.authenticate(usernamePassword);
+            var token = tokenService.generateToken((Usuario) auth.getPrincipal());
 
-        // Busca o usuário pelo email para obter o ID
-        UserDetails user = userRepository.findByEmail(data.email());
-        String userId = ((Usuario) user).getId();
-        return ResponseEntity.ok(new LoginResponseDTO(token, userId));
+            // Busca o usuário pelo email para obter o ID
+            UserDetails user = userRepository.findByEmail(data.email());
+            String userId = ((Usuario) user).getId();
+            return ResponseEntity.ok(new LoginResponseDTO(token, userId));
+        } catch (BadCredentialsException e) {
+            throw new InvalidCredentialsException("Email or password incorrect");
+        }
     }
 
     /**

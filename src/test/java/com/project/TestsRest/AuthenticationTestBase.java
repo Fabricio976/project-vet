@@ -1,6 +1,7 @@
 package com.project.TestsRest;
 
-import static org.hamcrest.Matchers.notNullValue;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +15,9 @@ import com.project.enums.Role;
 
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -23,28 +25,32 @@ public class AuthenticationTestBase {
 
     @LocalServerPort
     private int port;
+    private final static AtomicBoolean isClientRegistered = new AtomicBoolean(false);
 
     @BeforeEach
     void contextLoad() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
         RestAssured.basePath = "/projectvet";
+
     }
 
     @Test
     public void testRegisterClientSuccess() {
-        RegisterUserDTO client = new RegisterUserDTO(
+        if (isClientRegistered.compareAndSet(false, true)) {
+            RegisterUserDTO client = new RegisterUserDTO(
 
-                "John Doe",
-                "test_johndoe@example.com",
-                "password123",
-                "12345678901",
-                Role.CLIENT,
-                "123 Main St",
-                "1234567890");
+                    "John Doe",
+                    "test_johndoe@example.com",
+                    "password123",
+                    "12345678901",
+                    Role.CLIENT,
+                    "123 Main St",
+                    "1234567890");
 
-        given().contentType(ContentType.JSON).body(client).when().post("/register/client").then()
-                .statusCode(HttpStatus.OK.value());
+            given().contentType(ContentType.JSON).body(client).when().post("/register/client").then()
+                    .statusCode(HttpStatus.OK.value());
+        }
     }
 
     @Test
@@ -70,7 +76,7 @@ public class AuthenticationTestBase {
     void testLoginSuccess() {
         AuthenticationDTO loginData = new AuthenticationDTO("test_johndoe@example.com", "password123");
 
-        Response response = given()
+        given()
                 .contentType(ContentType.JSON)
                 .body(loginData)
                 .when()
@@ -82,11 +88,8 @@ public class AuthenticationTestBase {
                 .extract()
                 .response();
 
-        // Extrair o token do corpo da resposta
-        String token = response.jsonPath().getString("token");
 
-        // Imprimir o token no terminal
-        System.out.println("Token: " + token);
+
 
     }
 
@@ -100,9 +103,8 @@ public class AuthenticationTestBase {
                 .when()
                 .post("/login")
                 .then()
-                .statusCode(HttpStatus.FORBIDDEN.value());
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .body("error", equalTo("Email or password incorrect"));
     }
-
-    
 
 }
