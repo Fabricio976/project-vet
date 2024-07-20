@@ -45,15 +45,13 @@ public class AuthenticationController {
     public String recouverCode(@RequestBody Usuario usuario) {
         String email = usuario.getEmail();
         UserDetails foundUser = userRepository.findByEmail(email);
-    
+
         if (foundUser == null) {
             throw new EmailNotFoundException("Email not found: " + email);
         }
-    
+
         return managerUser.solicitarCodigo(email);
     }
-    
-
 
     @PostMapping("/change-password")
     public String changePassword(@RequestBody Usuario usuario) {
@@ -71,7 +69,7 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((Usuario) auth.getPrincipal());
-       
+
         // Busca o usuário pelo email para obter o ID
         UserDetails user = userRepository.findByEmail(data.email());
         String userId = ((Usuario) user).getId();

@@ -23,7 +23,7 @@ import com.project.services.AnimalService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/animals")
+@RequestMapping("/projectvet")
 public class AnimalController {
 
 
@@ -48,7 +48,7 @@ public class AnimalController {
     public Animal getAnimaisByUserCpf(Authentication auth, @PathVariable Integer rg) {
         return animalService.findByRg(rg);
     }
-    @PostMapping("/register")
+    @PostMapping("/animals/register")
     public String registerAnimal(@RequestBody @Valid RegisterAnimalDTO dataAnimal, Authentication auth) {
         return animalService.registerAnimal(auth.getPrincipal().toString(), dataAnimal);
     }

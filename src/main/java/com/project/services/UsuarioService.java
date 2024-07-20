@@ -18,7 +18,7 @@ import com.project.repositorys.UserRepository;
 public class UsuarioService {
 
     @Autowired
-    private UserRepository userRepository; 
+    private UserRepository userRepository;
 
     public List<Usuario> searchAllUser() {
         return userRepository.findAll();
@@ -32,7 +32,7 @@ public class UsuarioService {
         return usuario;
     }
 
-    public Usuario registerUser(RegisterUserDTO data){
+    public Usuario registerUser(RegisterUserDTO data) {
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         Usuario newUser = new Usuario(data.name(), data.email(), encryptedPassword, data.cpf(),
                 Role.CLIENT,
@@ -43,7 +43,7 @@ public class UsuarioService {
         return newUser;
     }
 
-    public Usuario regiterManager(RegisterUserDTO data){
+    public Usuario regiterManager(RegisterUserDTO data) {
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         Usuario newUser = new Usuario(data.name(), data.email(), encryptedPassword, data.cpf(),
                 Role.MANAGER,
@@ -53,7 +53,7 @@ public class UsuarioService {
 
         return newUser;
     }
-    
+
     public String editRegister(Usuario usuario) {
         userRepository.saveAndFlush(usuario);
         return ("Editado com Sucesso!");

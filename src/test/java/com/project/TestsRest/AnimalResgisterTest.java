@@ -1,36 +1,57 @@
 package com.project.TestsRest;
 
+import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
+import com.project.dto.AuthenticationDTO;
 import com.project.dto.RegisterAnimalDTO;
-import com.project.entitys.Usuario;
-import com.project.enums.Role;
 import com.project.enums.ServicePet;
 
-public class AnimalResgisterTest extends AuthenticationTestBase{
+import static io.restassured.RestAssured.given;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
-    @Test
-    public void testRegisterAnimalSuccess() {
-        // Cria um usuário responsável e um serviço de exemplo
-        Usuario responsible = new Usuario("Responsible User", "responsible@example.com", "password123", "12345678901", Role.CLIENT, "456 Another St", "0987654321");
+public class AnimalResgisterTest extends AuthenticationTestBase {
 
-        // Cria o DTO de registro de animal
-        RegisterAnimalDTO animal = new RegisterAnimalDTO(
-                "Buddy",
-                5,
-                "Golden Retriever",
-                "Dog",
-                responsible,
-               ServicePet.PETCLINIC);
+        @Test
+        public void testRegisterAnimalSuccess() {
+                AuthenticationDTO loginData = new AuthenticationDTO("test_johndoe@example.com", "password123");
 
-    //     given()
-    //             .header("Authorization", "Bearer " +to)
-    //             .contentType(ContentType.JSON)
-    //             .body(animal)
-    //             .when()
-    //             .post("/register/animal")
-    //             .then()
-    //             .statusCode(HttpStatus.OK.value());
-    }
+                Response loginResponse = given()
+                                .contentType(ContentType.JSON)
+                                .body(loginData)
+                                .when()
+                                .post("/login")
+                                .then()
+                                .statusCode(HttpStatus.OK.value())
+                                .body("token", notNullValue())
+                                .body("userId", notNullValue())
+                                .extract()
+                                .response();
+
+                // Extrair o token e o userId do corpo da resposta
+                String token = loginResponse.jsonPath().getString("token");
+                String responsible = loginResponse.jsonPath().getString("userId");
+
+                // Criar um novo animal
+                RegisterAnimalDTO animal = new RegisterAnimalDTO(
+                                "Buddy",
+                                5,
+                                "Golden Retriever",
+                                "Dog",
+                                responsible,
+                                ServicePet.PETCLINIC);
+
+                // Registrar o animal usando o token de autenticação
+                given()
+                                .auth()
+                                .oauth2(token) // Usando o token de autenticação
+                                .contentType(ContentType.JSON)
+                                .body(animal)
+                                .when()
+                                .post("/animals/register")
+                                .then()
+                                .statusCode(HttpStatus.OK.value());
+        }
 }
-

@@ -1,10 +1,6 @@
 package com.project.TestsRest;
 
-import io.restassured.RestAssured;
-import static io.restassured.RestAssured.*;
-
-import static org.hamcrest.Matchers.*;
-
+import static org.hamcrest.Matchers.notNullValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +12,8 @@ import com.project.dto.AuthenticationDTO;
 import com.project.dto.RegisterUserDTO;
 import com.project.enums.Role;
 
+import io.restassured.RestAssured;
+import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -60,7 +58,11 @@ public class AuthenticationTestBase {
                 "123 Main St",
                 "1234567890");
 
-        given().contentType(ContentType.JSON).body(client).when().post("/register/client").then()
+        given()
+                .contentType(ContentType.JSON)
+                .body(client)
+                .when()
+                .post("/register/client").then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -78,7 +80,7 @@ public class AuthenticationTestBase {
                 .body("token", notNullValue())
                 .body("userId", notNullValue())
                 .extract()
-            .response();
+                .response();
 
         // Extrair o token do corpo da resposta
         String token = response.jsonPath().getString("token");
@@ -100,5 +102,7 @@ public class AuthenticationTestBase {
                 .then()
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
+
+    
 
 }

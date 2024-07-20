@@ -32,7 +32,6 @@ public class AnimalService {
         return animalRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public Animal findByRg(Integer rg) {
         Animal animal = animalRepository.findByRg(rg);
         if (animal == null) {
