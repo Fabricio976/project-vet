@@ -1,15 +1,22 @@
 package com.project.services.details;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+
+import com.project.exeptions.EmailException;
+import com.project.exeptions.TemplateProcessingException;
+
 import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -43,8 +50,7 @@ public class EmailService {
             simpleMailMessage.setText(mensagem);
             javaMailSender.send(simpleMailMessage);
             return "Email enviado";
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (MailException ex) {
             return "Erro ao enviar o email";
         }
     }
@@ -67,7 +73,7 @@ public class EmailService {
 
             javaMailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException e) {
-            e.printStackTrace();
+            throw new EmailException("Error ao enviar email com template!",e);
         }
     }
 
@@ -78,11 +84,11 @@ public class EmailService {
      * @return  conteúdo do email gerado a partir do template
      */
     public String getConteudoTemplate(Map<String, Object> model) {
-        StringBuffer content = new StringBuffer();
+        StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(fmConfiguration.getTemplate("recuperacao-codigo.ftl"), model));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (TemplateException | IOException e) {
+            throw new TemplateProcessingException("Error ao processar template com template!",e);
         }
         return content.toString();
     }

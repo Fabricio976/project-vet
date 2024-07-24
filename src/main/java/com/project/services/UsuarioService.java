@@ -23,7 +23,7 @@ public class UsuarioService {
     public List<Usuario> searchAllUser() {
         return userRepository.findAll();
     }
-
+    
     public Usuario findByCpf(String cpf) {
         Usuario usuario = userRepository.findByCpf(cpf);
         if (usuario == null) {

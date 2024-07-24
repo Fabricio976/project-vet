@@ -4,7 +4,7 @@ public enum Role {
     CLIENT("Client"),
     MANAGER("Manager");
 
-    private String role;
+    private final String role;
 
     Role(String role) {
         this.role = role;
