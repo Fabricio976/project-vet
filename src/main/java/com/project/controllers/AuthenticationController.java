@@ -24,6 +24,11 @@ import com.project.services.details.TokenService;
 
 import jakarta.validation.Valid;
 
+
+/**
+ * Controller responsável pela autenticação e registro de usuários.
+ * Contém endpoints para login, recuperação e alteração de senha, e registro de clientes e funcionários.
+ */
 @RestController
 @RequestMapping("/projectvet")
 public class AuthenticationController {
@@ -43,6 +48,14 @@ public class AuthenticationController {
     @Autowired
     private ManagerUser managerUser;
 
+
+    /**
+    * Solicita um código de recuperação de senha para o usuário.
+    *
+    * @param usuario Dados do usuário, incluindo o e-mail.
+    * @return Código enviado para recuperação de senha.
+    * @throws EmailNotFoundException Se o e-mail não for encontrado.
+    */
     @PostMapping("/code-forgot")
     public String recouverCode(@RequestBody Usuario usuario) {
         String email = usuario.getEmail();
@@ -55,6 +68,12 @@ public class AuthenticationController {
         return managerUser.solicitarCodigo(email);
     }
 
+    /**
+    * Altera a senha do usuário.
+    *
+    * @param usuario O objeto que contém os dados do usuário, incluindo a nova senha.
+    * @return Uma mensagem indicando o resultado da operação de alteração de senha.
+    */
     @PostMapping("/change-password")
     public String changePassword(@RequestBody Usuario usuario) {
         return managerUser.alterarSenha(usuario);

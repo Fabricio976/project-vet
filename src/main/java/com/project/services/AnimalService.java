@@ -40,9 +40,16 @@ public class AnimalService {
         return animal;
     }
     
-    
+    /**
+     * Registra um novo animal no sistema.
+     *
+     * @param id ID do usuário responsável pelo animal.
+     * @param animalDTO Objeto contendo os dados do animal.
+     * @return Mensagem de confirmação do registro.
+     * @throws CpfNotFoundException Se o usuário responsável não for encontrado.
+     */
     public String registerAnimal(String id, RegisterAnimalDTO animalDTO) {
-        if (userRepository.findById(id) == null) {
+        if (userRepository.findById(id).isEmpty()) {
             throw new CpfNotFoundException("Usuário não encontrado!");
         }
         Animal animal = new Animal();
@@ -70,7 +77,10 @@ public class AnimalService {
         animalRepository.delete(animal);
     }
 
-    //Gera um número de 8 dígitos aleatorio para o RG do aniamal
+    /**
+     * Gera um número de 8 dígitos aleatorio para o RG do aniamal
+     * @return Rg gerado
+     */
     private Integer generateUniqueRg() {
         Integer rg;
         do {

@@ -38,8 +38,8 @@ public class AuthenticationTestBase {
         if (isClientRegistered.compareAndSet(false, true)) {
             RegisterUserDTO client = new RegisterUserDTO(
 
-                    "John Doe",
-                    "test_johndoe@example.com",
+                    "Fabricio Felizardo",
+                    "test_fabricio@example.com",
                     "password123",
                     "12345678901",
                     Role.CLIENT,
@@ -57,7 +57,7 @@ public class AuthenticationTestBase {
             RegisterUserDTO manager = new RegisterUserDTO(
 
                     "Maria Doe",
-                    "test_Mariadoe@example.com",
+                    "test_MariaDoe@example.com",
                     "password123",
                     "32145678901",
                     Role.MANAGER,
@@ -72,8 +72,8 @@ public class AuthenticationTestBase {
     @Test
     public void testRegisterClientEmailAlreadyExists() {
         RegisterUserDTO client = new RegisterUserDTO(
-                "John Doe",
-                "test_johndoe@example.com",
+                "Fabricio Felizardo",
+                "test_fabricio@example.com",
                 "password123",
                 "12345678901",
                 Role.CLIENT,
@@ -90,7 +90,7 @@ public class AuthenticationTestBase {
 
     @Test
     void testLoginSuccess() {
-        AuthenticationDTO loginData = new AuthenticationDTO("test_johndoe@example.com", "password123");
+        AuthenticationDTO loginData = new AuthenticationDTO("test_fabricio@example.com", "password123");
 
         given()
                 .contentType(ContentType.JSON)

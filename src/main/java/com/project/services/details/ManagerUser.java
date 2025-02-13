@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.project.entitys.Usuario;
 import com.project.repositorys.UserRepository;
 
-
+/**
+ * Classe responsável pela solicitação de código de recuperação de senha e alteração de senha.
+ */
 @Service
 public class ManagerUser {
 
@@ -23,6 +25,12 @@ public class ManagerUser {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    /**
+     * Solicita um código de recuperação de senha e o envia para o e-mail do usuário.
+     *
+     * @param email Endereço de e-mail do usuário.
+     * @return Mensagem indicando o resultado da solicitação.
+     */
     public String solicitarCodigo(String email) {
 
         Usuario usuario = (Usuario) userRepository.findByEmail(email);
@@ -35,6 +43,12 @@ public class ManagerUser {
 
     }
 
+    /**
+     * Altera a senha do usuário caso o código de recuperação seja válido.
+     *
+     * @param user Usuário contendo o e-mail, código de recuperação e nova senha.
+     * @return Mensagem indicando o resultado da operação.
+     */
     public String alterarSenha(Usuario user) {
         Usuario userBanco = (Usuario) userRepository.findByEmailAndCodeRecoveryPassword(user.getEmail(),
                 user.getCodeRecoveryPassword());
@@ -53,6 +67,9 @@ public class ManagerUser {
         }
     }
 
+    /**
+     * Gera um código de recuperação de senha com 4 números aleatórios e 4 letras aleatórias.
+     */
     private String getCodeRecoveryPassword(String id) {
 
         if (id.length() > 4) {

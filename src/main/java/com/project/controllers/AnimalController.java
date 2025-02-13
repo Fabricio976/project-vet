@@ -21,11 +21,13 @@ import com.project.repositorys.AnimalRepository;
 import com.project.services.AnimalService;
 
 import jakarta.validation.Valid;
-
+/**
+ * Controlador REST para gerenciar operações relacionadas a animais.
+ * Esta classe fornece endpoints para buscar, registrar, editar e excluir animais.
+ */
 @RestController
 @RequestMapping("/projectvet")
 public class AnimalController {
-
 
     @Autowired
     private AnimalService animalService;
@@ -33,37 +35,74 @@ public class AnimalController {
     @Autowired
     private AnimalRepository animalRepository;
 
-
+    /**
+     * Busca todos os animais registrados.
+     *
+     * @param auth O objeto de autenticação do usuário.
+     * @return Uma lista de todos os animais.
+     * @throws Exception Se ocorrer um erro durante a busca.
+     */
     @GetMapping("/searchAll")
     public List<Animal> searchAllanimals(Authentication auth) throws Exception {
         return animalService.searchAllAnimals();
     }
 
-    @GetMapping("/searchByUserCpf/{cpf}")
+    /**
+     * Busca animais registrados pelo CPF do responsável.
+     *
+     * @param cpf O CPF do responsável pelos animais.
+     * @return Uma lista de animais associados ao CPF fornecido.
+     * @throws Exception Se ocorrer um erro durante a busca.
+     */
+    @GetMapping("/searchByUser Cpf/{cpf}")
     public List<Animal> searchByResponsible(@PathVariable String cpf) throws Exception {
         return animalRepository.findAnimalsByUserCpf(cpf);
     }
 
+    /**
+     * Busca um animal pelo RG.
+     *
+     * @param auth O objeto de autenticação do usuário.
+     * @param rg O RG do animal a ser buscado.
+     * @return O animal correspondente ao RG fornecido.
+     */
     @GetMapping("/animalRg/{rg}")
     public Animal getAnimaisByUserCpf(Authentication auth, @PathVariable Integer rg) {
         return animalService.findByRg(rg);
     }
+
+    /**
+     * Registra um novo animal.
+     *
+     * @param dataAnimal Os dados do animal a ser registrado.
+     * @param auth O objeto de autenticação do usuário.
+     * @return Uma mensagem de confirmação do registro.
+     */
     @PostMapping("/animals/register")
     public String registerAnimal(@RequestBody @Valid RegisterAnimalDTO dataAnimal, Authentication auth) {
         return animalService.registerAnimal(auth.getPrincipal().toString(), dataAnimal);
     }
 
+    /**
+     * Edita o registro de um animal existente.
+     *
+     * @param idAnimal O animal com os dados atualizados.
+     * @return Uma resposta com o status da operação.
+     */
     @PutMapping("/editAnimal")
     public ResponseEntity<?> alterar(@RequestParam("idanimal") Animal idAnimal) {
         return ResponseEntity.ok().body(animalService.editRegister(idAnimal));
     }
 
+    /**
+     * Exclui um animal pelo RG.
+     *
+     * @param rg O RG do animal a ser excluído.
+     * @return Uma resposta vazia com o status da operação.
+     */
     @DeleteMapping("/excluirAnimal/{rg}")
     public ResponseEntity<Void> excluir(@PathVariable("rg") Integer rg) {
         animalService.excluir(rg);
         return ResponseEntity.ok().build();
     }
-
-
-    
 }

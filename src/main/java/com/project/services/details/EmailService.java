@@ -20,7 +20,9 @@ import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-
+/**
+ * Service responsável pelo envio de emails, incluindo emails de texto simples e emails baseados em templates.
+ */
 @Service
 public class EmailService {
 
@@ -34,11 +36,11 @@ public class EmailService {
     private String remetente;
 
     /**
-     * envia um email de texto simples para mudança da senha
+     * envia um email de texto para mudança da senha
      *
      * @param destinatario endereço de email do destinatário
-     * @param titulo       assunto do email
-     * @param mensagem     corpo da mensagem
+     * @param titulo assunto do email
+     * @param mensagem corpo da mensagem
      * @return mensagem indicando o sucesso ou falha do envio do email
      */
     public String enviarEmailTexto(String destinatario, String titulo, String mensagem) {
@@ -58,9 +60,9 @@ public class EmailService {
     /**
      * Envia um email com um template
      *
-     * @param destinatario  endereço de email do destinatário
-     * @param titulo        assunto do email
-     * @param propriedades  propriedades a serem usadas no template do email
+     * @param destinatario endereço de email do destinatário
+     * @param titulo assunto do email
+     * @param propriedades propriedades a serem usadas no template do email
      */
     public void enviarEmailTemplate(String destinatario, String titulo, Map<String, Object> propriedades) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

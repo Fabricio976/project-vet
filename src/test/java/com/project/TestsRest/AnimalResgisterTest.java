@@ -16,7 +16,7 @@ public class AnimalResgisterTest extends AuthenticationTestBase {
 
         @Test
         public void testRegisterAnimalSuccess() {
-                AuthenticationDTO loginData = new AuthenticationDTO("test_johndoe@example.com", "password123");
+                AuthenticationDTO loginData = new AuthenticationDTO("test_fabricio@example.com", "password123");
 
                 Response loginResponse = given()
                                 .contentType(ContentType.JSON)
