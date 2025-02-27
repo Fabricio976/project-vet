@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<head>
+
+  <link href="register.component.css" rel="stylesheet" />
+</head>
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
+  <main class="form-signin w-100 m-auto">
+    <form>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="60"
+        height="60"
+        fill="currentColor"
+        class="bi bi-person"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"
+        />
+      </svg>
+      <h1 class="h3 mb-3 fw-normal">Sign up</h1>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="floatingInputFirstName"
+                placeholder="PrimeiroNome"
+              />
+              <label for="floatingInputFirstName">Primeiro Nome</label>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="floatingInputLastName"
+                placeholder="Sobrenome"
+              />
+              <label for="floatingInputLastName">Sobrenome</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            id="floatingInput"
+            placeholder="name@example.com"
+          />
+          <label for="floatingInput">Email</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            class="form-control"
+            id="floatingPassword"
+            placeholder="Password"
+          />
+          <label for="floatingPassword">Senha</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="floatingCPF"
+            placeholder="CPF"
+          />
+          <label for="floatingCPF">CPF</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="floatingAddress"
+            placeholder="Endereço"
+          />
+          <label for="floatingAddress">Endereço</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="tel"
+            class="form-control"
+            id="floatingPhone"
+            placeholder="Telefone"
+          />
+          <label for="floatingPhone">Telefone</label>
+        </div>
+      </div>
+
+      <button class="btn btn-primary w-100 py-2" type="submit">Entrar</button>
+      <p class="mt-5 mb-3 text-body-secondary">Projeto Vet – 2025</p>
+    </form>
+  </main>
+  <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>

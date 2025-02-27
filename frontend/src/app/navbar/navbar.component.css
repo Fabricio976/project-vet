@@ -1,0 +1,28 @@
+
+.custom-navbar {
+  background-color: #d4dbe2 !important;
+}
+
+.center-search {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  cursor: pointer !important;
+  right: 0;
+  left: auto;
+  z-index: 1050;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
