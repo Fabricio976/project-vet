@@ -3,6 +3,7 @@ import { HomeComponent } from './views/pages/home/home.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import { RegisterAnimalsComponent } from './views/pages/register-animals/register-animals.component';
+import { ProfileComponent } from './views/pages/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -25,5 +26,8 @@ export const routes: Routes = [
   {
     path: 'register-animals',
     component: RegisterAnimalsComponent
+  },{
+    path:`profile-animal`,
+    component: ProfileComponent
   }
 ];

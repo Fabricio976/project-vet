@@ -23,7 +23,6 @@ export class NavbarComponent {
   }
 
   navigateToHome(){
-    this.closeDropdown();
     this.router.navigate(['/home'])
   }
 
